@@ -1,86 +1,39 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Criptografia RSA</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Criptografia RSA</title>
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="container">
     <div class="caixa-centralizada">
       <h1 class="titulo-maior">Criptografia RSA</h1>
       <h2 class="titulo2">O que você deseja fazer?</h2>
-      <select class="caixa-opcoes" id="opcao" onchange="atualizarFormulario()">
-        <option value="gerar">1 - Gerar chave pública</option>
-        <option value="encriptar">2 - Encriptar mensagem</option>
-        <option value="desencriptar">3 - Desencriptar mensagem</option>
+      <select class="caixa-opcoes" onchange="atualizarFormulario()">
+        <option value="opcao1">1 - Gerar chave pública</option>
+        <option value="opcao2">2 - Encriptar mensagem</option>
+        <option value="opcao3">3 - Desencriptar mensagem</option>
       </select>
 
       <h2 class="titulo2 titulo-p">Digite o valor de p (número primo):</h2>
-      <input class="caixa-pequena campo-p" id="p" type="text" placeholder="Ex: 17">
+      <input class="caixa-pequena campo-p" type="text" placeholder="Ex: 17" />
 
       <h2 class="titulo2 titulo-q">Digite o valor de q (número primo):</h2>
-      <input class="caixa-pequena campo-q" id="q" type="text" placeholder="Ex: 19">
+      <input class="caixa-pequena campo-q" type="text" placeholder="Ex: 19" />
 
       <h2 class="titulo2 titulo-e">Digite o valor de e (público):</h2>
-      <input class="caixa-pequena campo-e" id="e" type="text" placeholder="Ex: 7">
+      <input class="caixa-pequena campo-e" type="text" placeholder="Ex: 7" />
 
-      <h2 class="titulo2 titulo-mensagem escondido">Digite sua mensagem:</h2>
-      <input class="caixa-pequena campo-mensagem escondido" id="mensagem" type="text">
+      <h2 class="titulo2 titulo-decript escondido">Digite sua mensagem encriptada:</h2>
+      <input class="caixa-pequena campo-decript escondido" type="text" placeholder="Ex: 288 60 280" />
 
-      <button class="botao-executar" onclick="executarOperacao()">Executar</button>
-      <div class="caixa-result" id="resultado"></div>
+      <button class="botao-executar">Executar</button>
+      <div class="caixa-result"></div>
     </div>
   </div>
 
-  <script src="RSA.js"></script>
-  <script>
-    // Aguarda o módulo WASM carregar
-    Module.onRuntimeInitialized = function() {
-      console.log("Módulo WASM carregado!");
-    };
-
-    function executarOperacao() {
-      const opcao = document.getElementById('opcao').value;
-      const p = document.getElementById('p').value;
-      const q = document.getElementById('q').value;
-      const e = document.getElementById('e').value;
-      const mensagem = document.getElementById('mensagem').value;
-
-      let resultado;
-      
-      if (opcao === 'gerar') {
-        resultado = Module.ccall(
-          'gerarChavesRSA', // Nome da função C
-          'string',         // Tipo de retorno
-          ['string', 'string', 'string'], // Tipos dos parâmetros
-          [p, q, e]         // Valores dos parâmetros
-        );
-      } else if (opcao === 'encriptar') {
-        resultado = Module.ccall(
-          'encriptarMensagem',
-          'string',
-          ['string', 'string', 'string'],
-          [mensagem, e, n] // Note a ordem e, n como você pediu
-        );
-      } else if (opcao === 'desencriptar') {
-        resultado = Module.ccall(
-          'desencriptarMensagem',
-          'string',
-          ['string', 'string', 'string', 'string'],
-          [p, q, e, mensagem]
-        );
-      }
-
-      document.getElementById('resultado').innerText = resultado;
-    }
-
-    function atualizarFormulario() {
-      const opcao = document.getElementById('opcao').value;
-      // Mostra/oculta campos conforme a opção selecionada
-      // Implemente esta lógica conforme necessário
-    }
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
