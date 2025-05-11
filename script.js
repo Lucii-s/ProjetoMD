@@ -1,16 +1,3 @@
-let Module = {
-    onRuntimeInitialized: function() {
-        // Cria wrappers para as funções C
-        this.gerarChavesRSA = this.cwrap('gerarChavesRSA', 'string', ['string', 'string', 'string']);
-        this.encriptarMensagem = this.cwrap('encriptarMensagem', 'string', ['string', 'string', 'string']);
-        this.desencriptarComPQE = this.cwrap('desencriptarComPQE', 'string', ['string', 'string', 'string', 'string']);
-        
-        const botaoExecutar = document.querySelector('.botao-executar');
-        botaoExecutar.addEventListener('click', executarAcao);
-        atualizarFormulario();
-    }
-};
-
 function atualizarFormulario() {
   const opcao = document.querySelector('.caixa-opcoes').value;
 
@@ -57,45 +44,4 @@ function atualizarFormulario() {
     tituloDecript.classList.remove('escondido');
     campoDecript.classList.remove('escondido');
   }
-}
-
-
-function executarAcao() {
-    const opcao = document.querySelector('.caixa-opcoes').value;
-    const campoP = document.querySelector('.campo-p').value;
-    const campoQ = document.querySelector('.campo-q').value;
-    const campoE = document.querySelector('.campo-e').value;
-    const campoDecript = document.querySelector('.campo-decript').value;
-    const resultadoDiv = document.querySelector('.caixa-result');
-
-    // Limpa o resultado anterior
-    resultadoDiv.textContent = 'Processando...';
-
-    try {
-        let resultado;
-        
-        if (opcao === "opcao1") {
-            if (!campoP || !campoQ || !campoE) {
-                throw new Error("Preencha todos os campos");
-            }
-            resultado = Module.gerarChavesRSA(campoP, campoQ, campoE);
-            
-        } else if (opcao === "opcao2") {
-            if (!campoP || !campoQ || !campoE) {
-                throw new Error("Preencha todos os campos");
-            }
-            resultado = "Mensagem criptografada:\n" + Module.encriptarMensagem(campoP, campoQ, campoE);
-            
-        } else if (opcao === "opcao3") {
-            if (!campoP || !campoQ || !campoE || !campoDecript) {
-                throw new Error("Preencha todos os campos");
-            }
-            resultado = "Mensagem descriptografada:\n" + Module.desencriptarComPQE(campoP, campoQ, campoE, campoDecript);
-        }
-        
-        resultadoDiv.textContent = resultado;
-        
-    } catch (e) {
-        resultadoDiv.textContent = "Erro: " + e.message;
-    }
 }
