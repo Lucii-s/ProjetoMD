@@ -29,6 +29,26 @@
 
       <h2 class="titulo2 titulo-decript escondido">Digite sua mensagem encriptada:</h2>
       <input class="caixa-pequena campo-decript escondido" type="text" placeholder="Ex: 288 60 280" />
+      function run_wasm(){
+          var result = Module.ccall(
+            "main" , 
+            "string" ,
+            null , 
+            null
+          );
+          console.log(result);
+          var p = document.querySelector("#p").value;
+          var q = document .querySelector("#q").value;
+          var e = document. querySelector("#e").value;
+          result = Module.ccall(
+            "gerarChavesRSA" , 
+            "string" ,
+            ["string","string"]
+            [p, q, e],
+          );
+          
+          document.querySelector(".caixa-result").innerHTML = result;
+        }
 
       <button class="botao-executar">Executar</button>
       <div class="caixa-result"></div>
