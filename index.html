@@ -12,50 +12,98 @@
     <div class="caixa-centralizada">
       <h1 class="titulo-maior">Criptografia RSA</h1>
       <h2 class="titulo2">O que você deseja fazer?</h2>
-      <select class="caixa-opcoes" onchange="atualizarFormulario()">
+      <select id="opcoes" class="caixa-opcoes" onchange="atualizarFormulario()">
         <option value="opcao1">1 - Gerar chave pública</option>
         <option value="opcao2">2 - Encriptar mensagem</option>
         <option value="opcao3">3 - Desencriptar mensagem</option>
       </select>
 
       <h2 class="titulo2 titulo-p">Digite o valor de p (número primo):</h2>
-      <input class="caixa-pequena campo-p" type="text" placeholder="Ex: 17" />
+      <input id="p" class="caixa-pequena campo-p" type="text" placeholder="Ex: 17" />
 
       <h2 class="titulo2 titulo-q">Digite o valor de q (número primo):</h2>
-      <input class="caixa-pequena campo-q" type="text" placeholder="Ex: 19" />
+      <input id="q" class="caixa-pequena campo-q" type="text" placeholder="Ex: 19" />
 
       <h2 class="titulo2 titulo-e">Digite o valor de e (público):</h2>
-      <input class="caixa-pequena campo-e" type="text" placeholder="Ex: 7" />
+      <input id="e" class="caixa-pequena campo-e" type="text" placeholder="Ex: 7" />
+
+      <h2 class="titulo2 titulo-mensagem escondido">Digite sua mensagem:</h2>
+      <input id="mensagem" class="caixa-pequena campo-mensagem escondido" type="text" placeholder="Ex: Olá mundo" />
 
       <h2 class="titulo2 titulo-decript escondido">Digite sua mensagem encriptada:</h2>
-      <input class="caixa-pequena campo-decript escondido" type="text" placeholder="Ex: 288 60 280" />
-      <script>
-      function run_wasm(){
-          var result = Module.ccall(
-            "main" , 
-            "string" ,
-            null , 
-            null
-          );
-          console.log(result);
-          var p = document.querySelector("#p").value;
-          var q = document .querySelector("#q").value;
-          var e = document. querySelector("#e").value;
-          result = Module.ccall(
-            "gerarChavesRSA" , 
-            "string" ,
-            ["string","string"]
-            [p, q, e],
-          );
-          
-          document.querySelector(".caixa-result").innerHTML = result;
-        }
-      </script>
-      <button class="botao-executar">Executar</button>
+      <input id="decript" class="caixa-pequena campo-decript escondido" type="text" placeholder="Ex: 288 60 280" />
+
+      <button class="botao-executar" onclick="run_wasm()">Executar</button>
       <div class="caixa-result"></div>
     </div>
   </div>
 
-  <script src="script.js"></script>
+  <script>
+    function atualizarFormulario() {
+      const opcao = document.getElementById('opcoes').value;
+      const campoMensagem = document.querySelector('.campo-mensagem');
+      const campoTituloMensagem = document.querySelector('.titulo-mensagem');
+      const campoDecript = document.querySelector('.campo-decript');
+      const campoTituloDecript = document.querySelector('.titulo-decript');
+
+      // Esconder todos os campos extras inicialmente
+      campoMensagem.classList.add('escondido');
+      campoTituloMensagem.classList.add('escondido');
+      campoDecript.classList.add('escondido');
+      campoTituloDecript.classList.add('escondido');
+
+      // Mostrar campos conforme a opção selecionada
+      if (opcao === 'opcao2') {
+        campoMensagem.classList.remove('escondido');
+        campoTituloMensagem.classList.remove('escondido');
+      } else if (opcao === 'opcao3') {
+        campoDecript.classList.remove('escondido');
+        campoTituloDecript.classList.remove('escondido');
+      }
+    }
+
+    function run_wasm() {
+      const opcao = document.getElementById('opcoes').value;
+      const p = document.getElementById('p').value;
+      const q = document.getElementById('q').value;
+      const e = document.getElementById('e').value;
+      let result = '';
+
+      try {
+        if (opcao === 'opcao1') {
+          // Gerar chave pública
+          result = Module.ccall(
+            "gerarChavesRSA", 
+            "string",
+            ["string", "string", "string"],
+            [p, q, e]
+          );
+        } else if (opcao === 'opcao2') {
+          // Encriptar mensagem
+          const mensagem = document.getElementById('mensagem').value;
+          result = Module.ccall(
+            "encriptarRSA",
+            "string",
+            ["string", "string", "string", "string"],
+            [p, q, e, mensagem]
+          );
+        } else if (opcao === 'opcao3') {
+          // Desencriptar mensagem
+          const mensagemEncriptada = document.getElementById('decript').value;
+          result = Module.ccall(
+            "desencriptarRSA",
+            "string",
+            ["string", "string", "string", "string"],
+            [p, q, e, mensagemEncriptada]
+          );
+        }
+
+        document.querySelector(".caixa-result").innerHTML = result;
+      } catch (error) {
+        console.error("Erro ao executar operação RSA:", error);
+        document.querySelector(".caixa-result").innerHTML = "Erro: " + error.message;
+      }
+    }
+  </script>
 </body>
 </html>
