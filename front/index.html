@@ -34,14 +34,14 @@
 
 <script>
   var Module = {
-    wasmBinaryFile: 'RSA.wasm',
+    wasmBinaryFile: 'back/RSA.wasm',
     locateFile: function(path) {
-      if (path.endsWith('.wasm')) return 'RSA.wasm';
+      if (path.endsWith('.wasm')) return 'back/RSA.wasm';
       return path;
     }
   };
 </script>
-<script src="RSA.js"></script>
-  <script src="script.js"></script>
+<script src="back/RSA.js"></script>
+  <script src="front/script.js"></script>
 </body>
 </html>
