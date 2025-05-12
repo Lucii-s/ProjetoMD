@@ -47,32 +47,6 @@
 </script>
 <script src="ProjetoMD/RSA.js"></script>
   <script src="ProjetoMD/script.js"></script>
-    <script>  
-        function run_wasm(){
-          var result = Module.ccall(
-            "main" , 
-            "string" ,
-            null , 
-            null
-          );
-          console.log(result);
-          var p = document.querySelector("#p").value;
-          var q = document .querySelector("#q").value;
-          var e = document. querySelector("#e").value;
-          result = Module.ccall(
-            "gerarChavesRSA" , 
-            "string" ,
-            ["string","string"]
-            [p, q, e],
-          );
-          
-          document.querySelector(".caixa-result").innerHTML = result;
-        }
-        <input type="string" id = "p">
-        <input type="string" id = "q">
-        <input type="string" id = "e">
-        <button onclick="run_wasm()">Executar</button>
-      </script>
   
 </body>
 </html>
