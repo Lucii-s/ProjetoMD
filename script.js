@@ -11,6 +11,10 @@ function atualizarFormulario() {
   const campoE = document.querySelector('.campo-e');
   const campoDecript = document.querySelector('.campo-decript');
 
+  // Inicialização do WebAssembly
+  Module.onRuntimeInitialized = function() {
+    console.log("WebAssembly pronto!");
+
   // Esconde os campos de descriptografia por padrão
   tituloDecript.classList.add('escondido');
   campoDecript.classList.add('escondido');
